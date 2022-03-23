@@ -47,11 +47,11 @@
 
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                    登録済みの方はこちら
                 </a>
 
                 <x-button class="ml-4">
-                    {{ __('Register') }}
+                    登録
                 </x-button>
             </div>
         </form>

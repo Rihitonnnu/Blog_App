@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOwnerPasswordResets extends Migration
+class CreatePostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateOwnerPasswordResets extends Migration
      */
     public function up()
     {
-        Schema::create('owner_password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('title');
+            $table->text('body');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +29,6 @@ class CreateOwnerPasswordResets extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('owner_password_reset');
+        Schema::dropIfExists('posts');
     }
 }

@@ -19,6 +19,10 @@
                     </div>
                 </div>
             </div>
+            <div class="back_button">
+                <button type="button" onclick="location.href='{{ route('user.posts.index')}}'" class="bg-indigo-600 border-0 py-2 px-8 focus:outline-none hover:bg-gray-400 rounded text-lg">戻る</button>
+            </div>
         </div>
     </div>
+
 </x-app-layout>

@@ -26,8 +26,8 @@ class PostsController extends Controller
 
     public function index()
     {   
-        $e_all=Post::all();
-        $p_get=DB::table('posts')->select('name','title','body','created_at')->get();
+        $e_all=Post::select('id','name','title','body','created_at')->paginate(4);
+        $p_get=DB::table('posts')->select('name','title','body','created_at');
         return view('user.posts.index',compact('e_all','p_get'));
     }
 

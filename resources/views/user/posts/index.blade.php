@@ -20,6 +20,7 @@
                     </a>
                 @endforeach
             </div>
+            {{$e_all->links()}}
         </div>
     </div>
 </x-app-layout>

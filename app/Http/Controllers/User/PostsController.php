@@ -7,7 +7,8 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PostsController extends Controller
 {
@@ -27,8 +28,6 @@ class PostsController extends Controller
     {   
         $e_all=Post::all();
         $p_get=DB::table('posts')->select('name','title','body','created_at')->get();
-        // $d_now=Carbon::now();
-        // echo($d_now);
         return view('user.posts.index',compact('e_all','p_get'));
     }
 
@@ -50,7 +49,21 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            DB::transaction(function () use($request) {
+                // dd($request);
+                $e_all = Post::create([
+                    'name' => Auth::user()->name,
+                    'title' => $request->title,
+                    'body' => $request->body,
+                    'created_at' => Carbon::now(),
+                ]);
+            }, 2);
+        }catch(\Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+        return redirect()->route('user.posts.index');
     }
 
     /**

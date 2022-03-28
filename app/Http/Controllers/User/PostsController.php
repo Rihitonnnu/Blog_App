@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PostRequest;
 
 class PostsController extends Controller
 {
@@ -47,7 +48,7 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         try{
             DB::transaction(function () use($request) {
@@ -87,7 +88,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        
+        // dd($id);
+        $post_edit=Post::find($id);
+        return view('user.posts.edit',compact('post_edit'));
     }
 
     /**
@@ -99,7 +102,20 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post=Post::findOrFail($id);
+        // dd($post);
+        try{
+            DB::transaction(function () use($request, $post) {
+                    $post->title = $request->title;
+                    $post->body = $request->body;
+                    $post->created_at = Carbon::now();
+                    $post->save();
+            }, 2);
+        }catch(\Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+        return redirect()->route('user.posts.index');
     }
 
     /**

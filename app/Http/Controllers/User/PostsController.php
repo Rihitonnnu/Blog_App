@@ -27,9 +27,9 @@ class PostsController extends Controller
 
     public function index()
     {   
-        $e_all=Post::select('id','name','title','body','created_at')->paginate(4);
-        $p_get=DB::table('posts')->select('name','title','body','created_at');
-        return view('user.posts.index',compact('e_all','p_get'));
+        $e_all=Post::select('id','name','title','body','thumbnail','created_at')->paginate(4);
+        // dd($e_all);
+        return view('user.posts.index',compact('e_all'));
     }
 
     /**
@@ -48,15 +48,17 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostRequest $request)
+    public function store(Request $request)
     {
+        $file_name=$request->file('thumbnail')->store('');
+        $thumbnail_path=$request->file('thumbnail')->storeAs('public/posts/',$file_name);
         try{
-            DB::transaction(function () use($request) {
-                // dd($request);
+            DB::transaction(function () use($request,$thumbnail_path) {
                 $e_all = Post::create([
                     'name' => Auth::user()->name,
                     'title' => $request->title,
                     'body' => $request->body,
+                    'thumbnail'=>basename($thumbnail_path),
                     'created_at' => Carbon::now(),
                 ]);
             }, 2);
@@ -108,6 +110,7 @@ class PostsController extends Controller
             DB::transaction(function () use($request, $post) {
                     $post->title = $request->title;
                     $post->body = $request->body;
+                    $post->thumbnail=$request->thumbnail;
                     $post->created_at = Carbon::now();
                     $post->save();
             }, 2);

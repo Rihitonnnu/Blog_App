@@ -19,6 +19,7 @@ class PostSeeder extends Seeder
             'name'=>'test',
             'title'=>'タイトル',
             'body'=>'本文本文本文本文本文本文本文本文本文本文',
+            'thumbnail'=>'App_logo.jpeg',
             'created_at'=>'2020-01-01 11:11:11',
         ]);
     }

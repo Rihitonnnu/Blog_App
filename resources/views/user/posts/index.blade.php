@@ -10,12 +10,15 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @foreach ($e_all as $e_post)
                     <a href="{{ route('user.posts.show',['post'=>$e_post->id]) }}">
-                        <div class="p-6 bg-white border-b border-gray-200">
-                            <article class="article-item">
-                                <div class="article-title">{{ $e_post->name }}</div>
-                                <div class="article-title">{{ $e_post->title }}</div>
-                                <div class="article-title">{{ $e_post->created_at }}</div>
-                            </article>
+                        <div class="p-6 bg-white border-b border-gray-200 flex">
+                                <div class="article-thumbnail w-16">
+                                    <img class="" src="{{asset('storage/posts/'.$e_post->thumbnail)}}"/>
+                                </div>
+                                <div>
+                                    <div class="article-title">{{ $e_post->name }}</div>
+                                    <div class="article-title">{{ $e_post->title }}</div>
+                                    <div class="article-title">{{ $e_post->created_at }}</div>
+                                </div>
                         </div>
                     </a>
                 @endforeach

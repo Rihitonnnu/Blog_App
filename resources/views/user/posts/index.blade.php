@@ -11,7 +11,7 @@
                 @foreach ($e_all as $e_post)
                     <a href="{{ route('user.posts.show',['post'=>$e_post->id]) }}">
                         <div class="p-6 bg-white border-b border-gray-200 flex">
-                                <div class="article-thumbnail w-16">
+                                <div class="article-thumbnail w-16 mr-6">
                                     <img class="" src="{{asset('storage/posts/'.$e_post->thumbnail)}}"/>
                                 </div>
                                 <div>

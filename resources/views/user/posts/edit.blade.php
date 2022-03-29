@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <form method="post" action="{{ route('user.posts.update', ['post' => $post_edit->id]) }}">
+    <form method="POST" enctype="multipart/form-data" action="{{ route('user.posts.update', ['post' => $post_edit->id]) }}">
         @csrf
         @method('put')
         <section class="text-gray-600 body-font relative">
@@ -23,6 +23,14 @@
                 </div>
                 <div class="lg:w-1/2 md:w-2/3 mx-auto">
                     <div class="flex flex-wrap -m-2">
+                        <div class="pt-2 mb-4 mt-4">
+                            <div class="relative">
+                                <div class="p-2 w-full">
+                                    <label for="body" class="leading-7 text-sm text-gray-600">サムネイル</label>
+                                    <input type="file" name="thumbnail">
+                                </div>
+                            </div>
+                        </div>
                         <div class="p-2 w-full">
                             <div class="relative">
                                 <label for="body" class="leading-7 text-sm text-gray-600">投稿内容 ※必須</label>

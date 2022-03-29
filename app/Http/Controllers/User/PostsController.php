@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PostRequest;
+use Facade\FlareClient\Stacktrace\File;
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -105,12 +107,13 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         $post=Post::findOrFail($id);
-        // dd($post);
+        $file_name=$request->file('thumbnail')->store('');
+        $thumbnail_path=$request->file('thumbnail')->storeAs('public/posts/',$file_name);
         try{
-            DB::transaction(function () use($request, $post) {
+            DB::transaction(function () use($request, $post,$thumbnail_path) {
                     $post->title = $request->title;
                     $post->body = $request->body;
-                    $post->thumbnail=$request->thumbnail;
+                    $post->thumbnail=basename($thumbnail_path);
                     $post->created_at = Carbon::now();
                     $post->save();
             }, 2);

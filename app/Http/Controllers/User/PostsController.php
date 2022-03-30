@@ -29,10 +29,10 @@ class PostsController extends Controller
 
 
     public function index()
-    {   
-        $e_all=Post::select('id','name','title','body','thumbnail','created_at')->paginate(4);
+    {
+        $e_all = Post::select('id', 'name', 'title', 'body', 'thumbnail', 'created_at')->paginate(4);
         // dd($e_all);
-        return view('user.posts.index',compact('e_all'));
+        return view('user.posts.index', compact('e_all'));
     }
 
     /**
@@ -53,19 +53,32 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $file_name=$request->file('thumbnail')->store('');
-        $thumbnail_path=$request->file('thumbnail')->storeAs('public/posts/',$file_name);
-        try{
-            DB::transaction(function () use($request,$thumbnail_path) {
+        $validated = $request->validate(
+            [
+                'title' => 'required|string|max:100',
+                'body' => 'required|string|max:1500',
+                'thumbnail' => 'file|max:1600|mimes:jpeg,png,jpg,pdf',
+            ],
+            [
+                'title.required' => 'タイトルを入力してください',
+                'title.max' => '最大100文字まで',
+                'thumbnail.mimes' => 'この画像ファイル形式は対応していません',
+            ]
+        );
+
+        $file_name = $request->file('thumbnail')->store('');
+        $thumbnail_path = $request->file('thumbnail')->storeAs('public/posts/', $file_name);
+        try {
+            DB::transaction(function () use ($request, $thumbnail_path) {
                 $e_all = Post::create([
                     'name' => Auth::user()->name,
                     'title' => $request->title,
                     'body' => $request->body,
-                    'thumbnail'=>basename($thumbnail_path),
+                    'thumbnail' => basename($thumbnail_path),
                     'created_at' => Carbon::now(),
                 ]);
             }, 2);
-        }catch(\Throwable $e){
+        } catch (\Throwable $e) {
             Log::error($e);
             throw $e;
         }
@@ -80,9 +93,9 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post=Post::find($id);
+        $post = Post::find($id);
         // dd($post);
-        return view('user.posts.show',compact('post'));
+        return view('user.posts.show', compact('post'));
     }
 
     /**
@@ -94,8 +107,8 @@ class PostsController extends Controller
     public function edit($id)
     {
         // dd($id);
-        $post_edit=Post::find($id);
-        return view('user.posts.edit',compact('post_edit'));
+        $post_edit = Post::find($id);
+        return view('user.posts.edit', compact('post_edit'));
     }
 
     /**
@@ -107,18 +120,31 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post=Post::findOrFail($id);
-        $file_name=$request->file('thumbnail')->store('');
-        $thumbnail_path=$request->file('thumbnail')->storeAs('public/posts/',$file_name);
-        try{
-            DB::transaction(function () use($request, $post,$thumbnail_path) {
-                    $post->title = $request->title;
-                    $post->body = $request->body;
-                    $post->thumbnail=basename($thumbnail_path);
-                    $post->created_at = Carbon::now();
-                    $post->save();
+        $validated = $request->validate(
+            [
+                'title' => 'required|string|max:100',
+                'body' => 'required|string|max:1500',
+                'thumbnail' => 'file|max:1600|mimes:jpeg,png,jpg,pdf',
+            ],
+            [
+                'title.required' => 'タイトルを入力してください',
+                'title.max' => '最大100文字まで',
+                'thumbnail.mimes' => 'この画像ファイル形式は対応していません',
+            ]
+        );
+
+        $post = Post::findOrFail($id);
+        $file_name = $request->file('thumbnail')->store('');
+        $thumbnail_path = $request->file('thumbnail')->storeAs('public/posts/', $file_name);
+        try {
+            DB::transaction(function () use ($request, $post, $thumbnail_path) {
+                $post->title = $request->title;
+                $post->body = $request->body;
+                $post->thumbnail = basename($thumbnail_path);
+                $post->created_at = Carbon::now();
+                $post->save();
             }, 2);
-        }catch(\Throwable $e){
+        } catch (\Throwable $e) {
             Log::error($e);
             throw $e;
         }
@@ -133,18 +159,20 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        Post::findOrFail($id)->delete(); 
+        Post::findOrFail($id)->delete();
         return redirect()->route('user.posts.index');
     }
 
-    public function expiredPostsIndex(){
+    public function expiredPostsIndex()
+    {
         $expiredPosts = Post::onlyTrashed()->get();
         // dd($expiredPosts);
-        return view('user.posts.expired-posts',compact('expiredPosts'));
+        return view('user.posts.expired-posts', compact('expiredPosts'));
     }
 
-    public function expiredPostsDestroy($id){
+    public function expiredPostsDestroy($id)
+    {
         Post::onlyTrashed()->findOrFail($id)->forceDelete();
-        return redirect()->route('user.expired-posts.index'); 
+        return redirect()->route('user.expired-posts.index');
     }
 }

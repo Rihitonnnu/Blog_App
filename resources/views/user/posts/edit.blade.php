@@ -5,11 +5,21 @@
         </h2>
     </x-slot>
 
-    <form method="POST" enctype="multipart/form-data" action="{{ route('user.posts.update', ['post' => $post_edit->id]) }}">
+    <form method="POST" enctype="multipart/form-data"
+        action="{{ route('user.posts.update', ['post' => $post_edit->id]) }}">
         @csrf
         @method('put')
         <section class="text-gray-600 body-font relative">
             <div class="container px-5 py-24 mx-auto">
+                @if ($errors->any())
+                    <div class="alert alert-danger mb-3">
+                        <ul class="flex justify-center text-red-500">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="flex flex-col text-center w-full mb-12">
                     <p class="lg:w-2/3 mx-auto leading-relaxed text-base">タイトルと投稿内容を編集してください。</p>
                 </div>

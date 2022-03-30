@@ -25,8 +25,14 @@ class PostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:50',
-            'thumbnail' => 'image|file|',
+            'thumbnail' => 'file|max:1600|mimes:jpeg,png,jpg,pdf',
             'body' => 'required|string|max:1000',
+        ];
+    }
+
+    public function messages(){
+        return[
+            'file.mimes'=>'この形式のファイルは添付することができません'
         ];
     }
 }

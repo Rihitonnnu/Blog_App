@@ -175,4 +175,10 @@ class PostsController extends Controller
         Post::onlyTrashed()->findOrFail($id)->forceDelete();
         return redirect()->route('user.expired-posts.index');
     }
+
+    public function expiredPostsRestore($id)
+    {
+        Post::withTrashed()->findOrFail($id)->restore();
+        return redirect()->route('user.expired-posts.index');
+    }
 }

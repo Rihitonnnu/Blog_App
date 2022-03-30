@@ -21,6 +21,10 @@ Route::get('/', function () {
 Route::resource('posts',PostsController::class)
 ->middleware(['auth:users']);
 
+Route::prefix('expired-posts')->middleware('auth:users')->group(function(){
+    Route::get('index',[PostsController::class,'expiredPostsIndex'])->name('expired-posts.index');
+});
+
 Route::get('/dashboard', function () {
     return view('user.dashboard');
 })->middleware(['auth:users'])->name('dashboard');

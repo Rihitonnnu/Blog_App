@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('user.posts.index')" :active="request()->routeIs('user.posts.index')">
                         投稿一覧
                     </x-nav-link>
+                    <x-nav-link :href="route('user.expired-posts.index')" :active="request()->routeIs('user.expired-posts.index')">
+                        削除した投稿
+                    </x-nav-link>
                 </div>
             </div>
 

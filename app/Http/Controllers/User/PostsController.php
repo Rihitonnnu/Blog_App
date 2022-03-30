@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PostRequest;
 use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr\AssignOp\Pow;
 
 class PostsController extends Controller
 {
@@ -132,6 +133,13 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::findOrFail($id)->delete(); 
+        return redirect()->route('user.posts.index');
+    }
+
+    public function expiredPostsIndex(){
+        $expiredPosts = Post::onlyTrashed()->get();
+        // dd($expiredPosts);
+        return view('user.posts.expired-posts',compact('expiredPosts'));
     }
 }

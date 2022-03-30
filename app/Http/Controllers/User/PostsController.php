@@ -142,4 +142,9 @@ class PostsController extends Controller
         // dd($expiredPosts);
         return view('user.posts.expired-posts',compact('expiredPosts'));
     }
+
+    public function expiredPostsDestroy($id){
+        Post::onlyTrashed()->findOrFail($id)->forceDelete();
+        return redirect()->route('user.expired-posts.index'); 
+    }
 }

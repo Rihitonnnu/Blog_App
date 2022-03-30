@@ -23,6 +23,7 @@ Route::resource('posts',PostsController::class)
 
 Route::prefix('expired-posts')->middleware('auth:users')->group(function(){
     Route::get('index',[PostsController::class,'expiredPostsIndex'])->name('expired-posts.index');
+    Route::post('destroy/{post}',[PostsController::class,'expiredPostsDestroy'])->name('expired-posts.destroy');
 });
 
 Route::get('/dashboard', function () {
